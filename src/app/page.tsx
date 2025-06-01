@@ -36,6 +36,7 @@ export default function Home() {
                     width="128"
                     height="128"
                     viewBox="0 0 14 14"
+                    className="text-slate-600"
                   >
                     <g
                       fill="none"

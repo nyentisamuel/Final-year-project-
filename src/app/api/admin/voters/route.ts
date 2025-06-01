@@ -19,6 +19,7 @@ export async function GET() {
         email: true,
         hasVoted: true,
         createdAt: true,
+        approved: true,
         _count: {
           select: { votes: true },
         },

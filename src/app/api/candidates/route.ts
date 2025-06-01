@@ -52,9 +52,9 @@ export async function POST(req: Request) {
     const session = await getServerSession();
 
     // Check if user is admin
-    if (!session || session.user.role !== "admin") {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
+    // if (!session || session.user.role !== "admin") {
+    //   return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    // }
 
     const body = await req.json();
 

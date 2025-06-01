@@ -84,6 +84,7 @@ async function main() {
         name: "John Doe",
         fingerprintId: "fp_001",
         hasVoted: false,
+        approved: true,
       },
     }),
     prisma.voter.upsert({
@@ -94,6 +95,7 @@ async function main() {
         name: "Jane Smith",
         fingerprintId: "fp_002",
         hasVoted: false,
+        approved: false,
       },
     }),
     prisma.voter.upsert({
@@ -104,6 +106,7 @@ async function main() {
         name: "Bob Johnson",
         fingerprintId: "fp_003",
         hasVoted: true,
+        approved: false,
       },
     }),
     prisma.voter.upsert({
@@ -114,6 +117,7 @@ async function main() {
         name: "Alice Brown",
         fingerprintId: "fp_004",
         hasVoted: false,
+        approved: false,
       },
     }),
     prisma.voter.upsert({
@@ -124,10 +128,10 @@ async function main() {
         name: "Charlie Davis",
         fingerprintId: "fp_005",
         hasVoted: false,
+        approved: true,
       },
     }),
   ]);
-  console.log({ voters });
 
   // Create sample vote
   const vote = await prisma.vote.upsert({

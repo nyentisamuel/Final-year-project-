@@ -18,12 +18,23 @@ import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { VerificationBadge } from "@/components/verification-badge";
 
 export default function BallotPage() {
   const [selectedCandidate, setSelectedCandidate] = useState<string | null>(
     null,
   );
   const [localError, setLocalError] = useState<string | null>(null);
+  const [verificationStatus, setVerificationStatus] = useState<{
+    status: "verified" | "suspicious" | "unverified";
+    confidence: number;
+    message: string;
+  }>({
+    status: "unverified",
+    confidence: 0,
+    message: "Identity not yet verified",
+  });
+
   const {
     currentVoter,
     currentElection,
@@ -49,6 +60,25 @@ export default function BallotPage() {
     if (status === "unauthenticated") {
       router.push("/voter/login");
     }
+
+    // Check verification status from session storage
+    const storedVerification = sessionStorage.getItem("voterVerification");
+    if (storedVerification) {
+      try {
+        const verification = JSON.parse(storedVerification);
+        setVerificationStatus({
+          status: verification.isVerified
+            ? verification.confidence > 80
+              ? "verified"
+              : "suspicious"
+            : "unverified",
+          confidence: verification.confidence,
+          message: verification.message,
+        });
+      } catch (e) {
+        console.error("Error parsing verification status:", e);
+      }
+    }
   }, [status, router]);
 
   // Get candidates for the current election
@@ -64,6 +94,14 @@ export default function BallotPage() {
 
     if (!session) {
       setLocalError("Authentication error. Please login again.");
+      return;
+    }
+
+    // Additional verification check
+    if (verificationStatus.status === "unverified") {
+      setLocalError(
+        "Your identity could not be verified. Please try authenticating again.",
+      );
       return;
     }
 
@@ -108,11 +146,18 @@ export default function BallotPage() {
   return (
     <div className="flex min-h-screen flex-col bg-slate-50">
       <header className="border-b bg-white p-4">
-        <div className="container mx-auto">
-          <h1 className="text-xl font-bold">Official Ballot</h1>
-          <p className="text-sm text-muted-foreground">
-            {currentElection ? currentElection.title : "Loading election..."}
-          </p>
+        <div className="container mx-auto flex items-center justify-between">
+          <div>
+            <h1 className="text-xl font-bold">Official Ballot</h1>
+            <p className="text-sm text-muted-foreground">
+              {currentElection ? currentElection.title : "Loading election..."}
+            </p>
+          </div>
+          <VerificationBadge
+            status={verificationStatus.status}
+            confidence={verificationStatus.confidence}
+            message={verificationStatus.message}
+          />
         </div>
       </header>
 
@@ -140,6 +185,17 @@ export default function BallotPage() {
                 <AlertCircle className="h-4 w-4" />
                 <AlertTitle>Error</AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+
+            {verificationStatus.status === "suspicious" && (
+              <Alert variant="warning" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertTitle>Verification Warning</AlertTitle>
+                <AlertDescription>
+                  Your identity verification has some suspicious patterns. You
+                  can still vote, but this will be flagged for review.
+                </AlertDescription>
               </Alert>
             )}
 
@@ -179,7 +235,11 @@ export default function BallotPage() {
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={!selectedCandidate || isVotingLoading}
+              disabled={
+                !selectedCandidate ||
+                isVotingLoading ||
+                verificationStatus.status === "unverified"
+              }
             >
               {isVotingLoading ? "Submitting..." : "Cast Vote"}
             </Button>

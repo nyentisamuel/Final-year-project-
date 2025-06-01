@@ -1,6 +1,7 @@
 "use client";
 
 import { CardFooter } from "@/components/ui/card";
+import { Shield } from "lucide-react";
 
 import type React from "react";
 
@@ -241,10 +242,18 @@ export default function AdminDashboardPage() {
       <header className="border-b bg-white p-4 shadow-sm">
         <div className="container mx-auto flex items-center justify-between">
           <h1 className="text-xl font-bold">Admin Dashboard</h1>
-          <Button variant="ghost" size="sm" className="mr-10" onClick={handleLogout}>
-            <LogOut className="mr-2 h-4 w-4" />
-            Logout
-          </Button>
+          <div className="flex items-center">
+            <Link href="/admin/fraud-detection">
+              <Button variant="outline" size="sm" className="mr-2">
+                <Shield className="mr-2 h-4 w-4" />
+                Fraud Detection
+              </Button>
+            </Link>
+            <Button variant="ghost" size="sm" onClick={handleLogout}>
+              <LogOut className="mr-2 h-4 w-4" />
+              Logout
+            </Button>
+          </div>
         </div>
       </header>
 

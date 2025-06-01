@@ -26,6 +26,7 @@ model Voter {
   fingerprintId String   @unique
   email         String?  @unique
   hasVoted      Boolean  @default(false)
+  approved      Boolean? @default(false)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
   votes         Vote[]

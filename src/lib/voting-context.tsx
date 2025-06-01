@@ -62,6 +62,7 @@ interface VotingContextType {
 
   // Error state
   error: string | null;
+  setError: (message: string | null) => void;
 
   // Actions
   authenticateVoter: (fingerprintId: string) => Promise<Voter | null>;
@@ -519,6 +520,7 @@ export const VotingProvider = ({ children }: { children: ReactNode }) => {
 
     // Error state
     error,
+    setError,
 
     // Actions
     authenticateVoter,
