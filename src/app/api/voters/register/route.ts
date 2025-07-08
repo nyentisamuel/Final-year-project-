@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     const body = await req.json();
 
     // Validate request body
+    console.log(body);
     const validation = voterSchema.safeParse(body);
     if (!validation.success) {
       return NextResponse.json(

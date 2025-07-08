@@ -1,6 +1,8 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ChatProvider } from "@/lib/chat-context";
+import { ChatWidget } from "@/components/chat-widget";
 import "./globals.css";
 import App from "@/components/app";
 
@@ -19,7 +21,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className}>
-        <App>{children}</App>
+        <App>
+          <ChatProvider>
+            {children}
+            <ChatWidget />
+          </ChatProvider>
+        </App>
       </body>
     </html>
   );
