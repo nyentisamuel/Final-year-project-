@@ -136,12 +136,20 @@ export function FingerprintScanner() {
     }
   }, [scanComplete, authenticateVoter, router, setError]);
 
-  const handleScan = () => {
+  async function handleScan() {
+    navigator.credentials.get({
+      publicKey: {
+        challenge: new Uint8Array([0, 1, 2, 3, 4, 5]),
+        allowCredentials: [
+          { type: "public-key", id: JSON.parse(localStorage.getItem("id")) },
+        ],
+      },
+    });
     resetError();
-    setFingerprintId(null);
+    setFingerprintId(JSON.parse(localStorage.getItem("id")));
     setVerificationResult(null);
     setScanning(true);
-  };
+  }
 
   return (
     <Card className="w-full max-w-md">

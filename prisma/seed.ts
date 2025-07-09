@@ -40,7 +40,7 @@ async function main() {
       update: {},
       create: {
         id: "c1",
-        name: "Alex Morgan",
+        name: "Nyenti Samuel",
         party: "Progressive Party",
         position: "President",
         bio: "Experienced leader with a focus on economic growth and social justice.",
@@ -52,7 +52,7 @@ async function main() {
       update: {},
       create: {
         id: "c2",
-        name: "Taylor Reed",
+        name: "Akwa Liam",
         party: "Conservative Union",
         position: "President",
         bio: "Dedicated to traditional values and fiscal responsibility.",
@@ -64,7 +64,7 @@ async function main() {
       update: {},
       create: {
         id: "c3",
-        name: "Jordan Casey",
+        name: "Epie Courage",
         party: "Liberty Alliance",
         position: "President",
         bio: "Committed to individual freedom and limited government.",
@@ -81,7 +81,7 @@ async function main() {
       update: {},
       create: {
         id: "v1",
-        name: "John Doe",
+        name: "Ntangju Bryan",
         fingerprintId: "fp_001",
         hasVoted: false,
         approved: true,
@@ -92,7 +92,7 @@ async function main() {
       update: {},
       create: {
         id: "v2",
-        name: "Jane Smith",
+        name: "Nkiru Chigoze",
         fingerprintId: "fp_002",
         hasVoted: false,
         approved: false,
@@ -103,32 +103,10 @@ async function main() {
       update: {},
       create: {
         id: "v3",
-        name: "Bob Johnson",
+        name: "John The Boss",
         fingerprintId: "fp_003",
         hasVoted: true,
         approved: false,
-      },
-    }),
-    prisma.voter.upsert({
-      where: { fingerprintId: "fp_004" },
-      update: {},
-      create: {
-        id: "v4",
-        name: "Alice Brown",
-        fingerprintId: "fp_004",
-        hasVoted: false,
-        approved: false,
-      },
-    }),
-    prisma.voter.upsert({
-      where: { fingerprintId: "fp_005" },
-      update: {},
-      create: {
-        id: "v5",
-        name: "Charlie Davis",
-        fingerprintId: "fp_005",
-        hasVoted: false,
-        approved: true,
       },
     }),
   ]);

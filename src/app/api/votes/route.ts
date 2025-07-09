@@ -30,7 +30,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const voterId = session.user.id;
+    const voterId = body.currentVoter.id;
 
     // Check if voter exists
     const voter = await prisma.voter.findUnique({

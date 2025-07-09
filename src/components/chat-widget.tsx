@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChat } from "@/lib/chat-context";
 import { MessageCircle, X, Send, Trash2, Minimize2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 import { cn } from "@/lib/utils";
 
 export function ChatWidget() {
@@ -140,7 +141,7 @@ export function ChatWidget() {
                           : "bg-gray-100 text-gray-900 border",
                       )}
                     >
-                      <p className="whitespace-pre-wrap">{message.text}</p>
+                      <ReactMarkdown>{message.text}</ReactMarkdown>
                       <p className="text-xs opacity-70 mt-1">
                         {message.timestamp.toLocaleTimeString([], {
                           hour: "2-digit",

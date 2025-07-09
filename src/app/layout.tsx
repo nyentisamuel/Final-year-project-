@@ -5,6 +5,10 @@ import { ChatProvider } from "@/lib/chat-context";
 import { ChatWidget } from "@/components/chat-widget";
 import "./globals.css";
 import App from "@/components/app";
+import {
+  FpjsProvider,
+  FingerprintJSPro,
+} from "@fingerprintjs/fingerprintjs-pro-react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,15 +22,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  console.log(FingerprintJSPro.defaultScriptUrlPattern);
   return (
     <html lang="en" suppressHydrationWarning={true}>
       <body className={inter.className}>
-        <App>
-          <ChatProvider>
-            {children}
-            <ChatWidget />
-          </ChatProvider>
-        </App>
+        <FpjsProvider
+          loadOptions={{
+            apiKey: "B4vH7tx3Vcj17mKH3ZCp",
+          }}
+        >
+          <App>
+            <ChatProvider>
+              {children}
+              <ChatWidget />
+            </ChatProvider>
+          </App>
+        </FpjsProvider>
       </body>
     </html>
   );

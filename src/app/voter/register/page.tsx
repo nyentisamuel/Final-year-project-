@@ -32,11 +32,28 @@ export default function VoterRegistrationPage() {
   const { registerVoter, error, resetError } = useVoting();
   const router = useRouter();
 
-  const handleScanFingerprint = () => {
+  async function handleScanFingerprint() {
     if (!name) {
       setLocalError("Please enter your name first");
       return;
     }
+
+    const data = await navigator.credentials.create({
+      publicKey: {
+        challenge: new Uint8Array([0, 1, 2, 3, 4, 5]),
+        rp: { name: "fingerprint voting" },
+        user: {
+          id: new Uint8Array(16),
+          name: email,
+          displayName: name,
+        },
+        pubKeyCredParams: [
+          { type: "public-key", alg: -7 },
+          { type: "public-key", alg: -8 },
+          { type: "public-key", alg: -257 },
+        ],
+      },
+    });
 
     setLocalError(null);
     resetError();
@@ -54,13 +71,11 @@ export default function VoterRegistrationPage() {
         setScanComplete(true);
 
         // Generate a random fingerprint ID
-        const randomId = `fp_${Math.floor(Math.random() * 10000)
-          .toString()
-          .padStart(4, "0")}`;
-        setFingerprintId(randomId);
+        setFingerprintId(data.rawId);
+        localStorage.setItem("id", data.rawId);
       }
     }, 100);
-  };
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

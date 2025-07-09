@@ -298,6 +298,7 @@ export const VotingProvider = ({ children }: { children: ReactNode }) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          currentVoter,
           candidateId,
           electionId: currentElection.id,
         }),

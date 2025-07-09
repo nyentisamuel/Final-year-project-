@@ -53,7 +53,7 @@ export default function BallotPage() {
     if (currentElection) {
       fetchCandidates(currentElection.id);
     }
-  }, [currentElection, fetchCandidates]);
+  }, []);
 
   useEffect(() => {
     // Redirect if no voter is authenticated

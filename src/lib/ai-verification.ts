@@ -22,7 +22,7 @@ export async function verifyFingerprint(
 
     // Create a comprehensive prompt for fingerprint verification analysis
     const prompt = `
-You are an advanced biometric security system analyzing a fingerprint authentication attempt. 
+You are an advanced biometric security system analyzing a fingerprint authentication attempt. you use both english and french to reply 
 
 AUTHENTICATION DATA:
 - Registered Fingerprint ID: ${registeredId}
