@@ -52,6 +52,12 @@ export default function VoterRegistrationPage() {
           { type: "public-key", alg: -8 },
           { type: "public-key", alg: -257 },
         ],
+        authenticatorSelection: {
+          authenticatorAttachment: "platform",
+          userVerification: "required"
+        },
+        timeout: 60000,
+        attestation: "none"
       },
     });
 
@@ -59,7 +65,7 @@ export default function VoterRegistrationPage() {
     resetError();
     setScanning(true);
 
-    // Simulate fingerprint scanning
+    
     let currentProgress = 0;
     const interval = setInterval(() => {
       currentProgress += 5;
@@ -70,9 +76,19 @@ export default function VoterRegistrationPage() {
         setScanning(false);
         setScanComplete(true);
 
-        // Generate a random fingerprint ID
-        setFingerprintId(data.rawId);
-        localStorage.setItem("id", data.rawId);
+        function arrayBufferToBase64(buffer){
+          const bytes = new Uint8Array(buffer)
+          const binary = bytes.reduce((data, byte) => data + String.fromCharCode(byte), '')
+          return btoa(binary)
+        }
+
+        
+
+        // Generate a random fingerprint ID 
+        setFingerprintId(arrayBufferToBase64(data.rawId));
+
+        
+
       }
     }, 100);
   }
@@ -97,6 +113,7 @@ export default function VoterRegistrationPage() {
 
     if (voter) {
       setSuccess("Registration successful! You can now login to vote.");
+      localStorage.setItem('id', fingerprintId)
 
       // Redirect after a delay
       setTimeout(() => {

@@ -46,18 +46,35 @@ export function FingerprintScanner() {
 
   useEffect(() => {
     if (scanComplete) {
-      // Simulate fingerprint matching
+    
       setTimeout(async () => {
-        const fingerprintIds = [
-          "fp_001",
-          "fp_002",
-          "fp_003",
-          "fp_004",
-          "fp_005",
-        ];
-        const randomIndex = Math.floor(Math.random() * fingerprintIds.length);
-        const randomFingerprintId = fingerprintIds[randomIndex];
-        setFingerprintId(randomFingerprintId);
+        const Fid = await localStorage.getItem('id')
+        function base64toArrayBuffer(base64){
+          const binary = atob(base64)
+          const len = binary.length;
+          const buffer = new ArrayBuffer(len)
+          const bytes = new Uint8Array(buffer)
+          for(let i = 0; i < len; i++){
+            bytes[i] = binary.charCodeAt(i)
+          }
+          return buffer
+        }
+
+        const fingerprint = base64toArrayBuffer(Fid)
+        setFingerprintId(Fid)
+
+        const data = await navigator.credentials.get({
+          publicKey: {
+            challenge: new Uint8Array([0, 1, 2, 3, 4, 5]),
+            allowCredentials: [
+              { type: "public-key", id: fingerprint },
+            ],
+            timeout: 60000,
+            userVerification: "required", 
+          },
+        });
+
+        
 
         // Start AI verification
         setVerifying(true);
@@ -69,7 +86,7 @@ export function FingerprintScanner() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ fingerprintId: randomFingerprintId }),
+            body: JSON.stringify({ fingerprintId: fingerprintId }),
           });
 
           const data = await response.json();
@@ -95,7 +112,7 @@ export function FingerprintScanner() {
 
           // If verification passed, proceed with authentication
           if (data.verification.isVerified) {
-            const voter = await authenticateVoter(randomFingerprintId);
+            const voter = await authenticateVoter(fingerprintId);
 
             if (voter) {
               if (voter.hasVoted) {
@@ -103,7 +120,7 @@ export function FingerprintScanner() {
               } else {
                 // Use NextAuth to sign in
                 const result = await signIn("credentials", {
-                  fingerprintId: randomFingerprintId,
+                  fingerprintId: fingerprintId,
                   role: "voter",
                   redirect: false,
                 });
@@ -136,17 +153,8 @@ export function FingerprintScanner() {
     }
   }, [scanComplete, authenticateVoter, router, setError]);
 
-  async function handleScan() {
-    navigator.credentials.get({
-      publicKey: {
-        challenge: new Uint8Array([0, 1, 2, 3, 4, 5]),
-        allowCredentials: [
-          { type: "public-key", id: JSON.parse(localStorage.getItem("id")) },
-        ],
-      },
-    });
+  function handleScan() {
     resetError();
-    setFingerprintId(JSON.parse(localStorage.getItem("id")));
     setVerificationResult(null);
     setScanning(true);
   }
